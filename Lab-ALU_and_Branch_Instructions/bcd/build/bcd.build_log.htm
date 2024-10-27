@@ -8,7 +8,7 @@ Copyright (C) 2024 ARM Ltd and ARM Germany GmbH. All rights reserved.
 License Information: manuel strenge
 zhaw
 User-based license: Keil MDK Community (non-commercial free of charge)
-Valid until: Jun 1 2033. Cached until: Oct 26 2024
+Valid until: Jun 1 2033. Cached until: Nov 2 2024
  
 Tool Versions:
 Toolchain:       Keil MDK Community (non-commercial free of charge  Version: 5.41.0.0
@@ -24,13 +24,16 @@ Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.3.0.0
 Dialog DLL:      TARMCM1.DLL V1.14.6.0
  
 <h2>Project:</h2>
-C:\DEV\ct1\Lab-ArithmOperations\sum_diff\sum_diff.uvprojx
-Project File Date:  10/19/2024
+C:\DEV\ct1\Lab-ALU_and_Branch_Instructions\bcd\bcd.uvprojx
+Project File Date:  10/27/2024
 
 <h2>Output:</h2>
 *** Using Compiler 'V6.22', folder: 'C:\Users\manue\AppData\Local\Keil_v5\ARM\ARMCLANG\Bin'
 Build target 'Target 1'
-".\build\sum_diff.axf" - 0 Error(s), 0 Warning(s).
+assembling main.s...
+linking...
+Program Size: Code=7860 RO-data=964 RW-data=0 ZI-data=8192  
+".\build\bcd.axf" - 0 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -53,37 +56,37 @@ Package Vendor: InES
 <h2>Collection of Component Files used:</h2>
 
    * Component: InES::Device:Startup@4.0.4
-      Source file:   Device/Source/system_ctboard.c
-      Source file:   Device/Source/datainit_ctboard.s
+      Include file:  Device/Include/reg_stm32f4xx.h
+      Include file:  Device/Include/system_ctboard.h
       Include file:  Device/Include/reg_ctboard.h
       Source file:   Device/Source/startup_ctboard.s
-      Include file:  Device/Include/system_ctboard.h
+      Source file:   Device/Source/datainit_ctboard.s
+      Source file:   Device/Source/system_ctboard.c
       Include file:  Device/Include/m0/platform_ctboard.h
-      Include file:  Device/Include/reg_stm32f4xx.h
 
    * Component: InES::HAL:FMC@4.0.4
+      Source file:   HAL/Source/hal_fmc.c
+      Include file:  Device/Include/reg_stm32f4xx.h
       Include file:  HAL/Include/hal_fmc.h
       Include file:  HAL/Include/hal_common.h
-      Include file:  Device/Include/reg_stm32f4xx.h
-      Source file:   HAL/Source/hal_fmc.c
 
    * Component: InES::HAL:GPIO@4.0.4
-      Include file:  HAL/Include/hal_gpio.h
       Include file:  Device/Include/reg_stm32f4xx.h
-      Source file:   HAL/Source/hal_gpio.c
       Include file:  HAL/Include/hal_common.h
+      Source file:   HAL/Source/hal_gpio.c
+      Include file:  HAL/Include/hal_gpio.h
 
    * Component: InES::HAL:PWR@4.0.4
       Include file:  Device/Include/reg_stm32f4xx.h
-      Include file:  HAL/Include/hal_pwr.h
-      Include file:  HAL/Include/hal_common.h
       Source file:   HAL/Source/hal_pwr.c
+      Include file:  HAL/Include/hal_common.h
+      Include file:  HAL/Include/hal_pwr.h
 
    * Component: InES::HAL:RCC@4.0.4
-      Include file:  Device/Include/reg_stm32f4xx.h
+      Include file:  HAL/Include/hal_rcc.h
       Include file:  HAL/Include/hal_common.h
       Source file:   HAL/Source/hal_rcc.c
-      Include file:  HAL/Include/hal_rcc.h
+      Include file:  Device/Include/reg_stm32f4xx.h
 Build Time Elapsed:  00:00:00
 </pre>
 </body>
