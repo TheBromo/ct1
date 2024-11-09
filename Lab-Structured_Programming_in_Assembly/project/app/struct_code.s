@@ -94,8 +94,9 @@ main_loop
 		LDR     r0, =DISPLAY_COLOUR_GREEN	;offset for green	
 		BL 		set_background_to_offset	;set background green
 		
-		MOVS 	R0, R4						; set r5 adc
+		MOVS 	R0, R4						; set r0 adc
 		BL 		display_7_seg				;display adc on 7 seg displ
+		BL 		adc_bar						;display the bar
 		B		t0_end_if
 		
 t0_else ;t0 pressed == false
@@ -153,7 +154,7 @@ display_7_seg PROC
 		STRB    R2, [R1, #1]	;write 00 at the beginning
 		STRB    R0, [R1, #0]    ;write input  00xx
 		POP		{R1-R2,PC}
-		ENDP
+		ENDP	
 				
 diff_proc PROC
 		PUSH	{R0-R3,LR}				;r4 adc
@@ -162,21 +163,101 @@ diff_proc PROC
 		SUBS 	R0, R4, R0				;r0 = diff
 		CMP		R0,	#0x0				;if diff >=0
 		MOVS	R3, R0					;r3 =diff
+		MOVS	R5, R0					;r3 =diff
+
 		BLT		diff_false		
 		;true 
 		LDR     r0, =DISPLAY_COLOUR_BLUE	;offset for blue	
 		BL 		set_background_to_offset	;set background blue
+		BL		display_bit
 		B		diff_end_if
 diff_false
 		;false
 		LDR     r0, =DISPLAY_COLOUR_RED		;offset for red	
 		BL 		set_background_to_offset	;set background red
+		BL		display_zeros
 diff_end_if		
 		;display diff on 7 seg display
 		MOVS 	R0,R3						;R0=diff
 		BL 		display_7_seg				;display adc on 7 seg display
 		POP{R0-R3,PC}
 		ENDP
+
+adc_bar PROC
+		PUSH	{R0-R3,LR}				;r4 adc
+		LSRS	R0,R4,#3				; R0= ADC>>3
+		MOVS	R1, #1					; R1=led_count = 1
+adc_while		
+		CMP		R0,#0
+		BEQ		adc_while_end			; while R0 != 0
+		LSLS	R1,R1,#1				; 0001 << 1	= 0010
+		ADDS	R1,R1,#0x1				; 0010 | 1  = 0011 
+		SUBS	R0,R0, #1				; R0--
+		B		adc_while
+adc_while_end
+		LDR 	R2,=ADDR_LED_31_0
+		STR		R1,[R2,#0]				; display led_count
+		POP{R0-R3,PC}
+		ENDP
+		
+
+display_bit PROC
+		PUSH	{R0-R3,LR}		;r5 diff
+		BL 		clear_lcd
+		MOVS	R1, R5
+		BL		write_bit_ascii	; print "Bit "
+		CMP     R1, #4          ; Check if diff < 4
+		BLT     display_2bit    ; If r1 < 4, branch to display_2bit
+		CMP     R1, #16         ; Check if diff < 16
+		BLT     display_4bit    ; If r1 < 16, branch to display_4bit
+		B       display_8bit    ; In all other cases, branch to display_8bit
+
+display_2bit
+        LDR        	R1, =DISPLAY_2_BIT
+		B       end_display   
+
+display_4bit
+        LDR       	R1, =DISPLAY_4_BIT
+		B       end_display    
+			
+display_8bit
+        LDR        	R1, =DISPLAY_8_BIT
+
+end_display
+	    LDR        R1, [R1]
+		LDR     	R0, =ADDR_LCD_ASCII 
+        STRB       	R1, [R0,#8]
+		POP			{R0-R3,PC}
+		ENDP
+			
+
+display_zeros PROC
+		PUSH	{R0-R4,LR}		;r5 diff
+		BL 		clear_lcd
+		MVNS     R4, R5          ; Invert diff and store it in r4
+		MOVS     R3, #0          ; Initialize count to 0, store in r5
+loop_disp
+		CMP     R4, #0          ; Check if diff is 0
+		BEQ     end_loop        ; Exit loop if diff is 0
+
+		MOVS	R0, #1
+		TST     R4, R0          ; Test if the least significant bit of diff is 1
+		BEQ     shift_right     ; If not, skip incrementing count
+
+		ADDS     R3, R3, #1      ; Increment count if the least significant bit is 1
+
+shift_right
+		LSRS     R4, R4, #1      ; Logical shift right by 1 to check the next bit
+		B       loop_disp       ; Repeat the loop
+
+end_loop
+		LDR R0,=0x60000337
+		STRB R3,[R0,#0]
+		POP			{R0-R4,PC}
+		endp
+
+
+
 		ALIGN
 ; ------------------------------------------------------------------
 ; End of code
