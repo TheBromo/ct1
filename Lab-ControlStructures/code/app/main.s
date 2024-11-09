@@ -71,7 +71,7 @@ read_dipsw      ; Read operands into R0 and R1 and display on LEDs
 				UXTB 	R0,R0
 				UXTB 	R1,R1
 
-                ; END: To be programmed
+					; END: To be programmed
                     
 read_hexsw      ; Read operation into R2 and display on 7seg.
                 ; STUDENTS: To be programmed
