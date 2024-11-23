@@ -49,13 +49,12 @@ search_max      PROC
 				BEQ search_end
 				
 search_start
-				LSLS R3, R1, #2		;convert index to memaddr = index * 4 = R3
+				LSLS R3, R1, #2		;convert index to memaddr_index = index * 4 = R3
 				LDR R2,[R4, R3]		;load valuee to compare
 				
-				CMP  R2, R0			; compare max with r2 value
-									
-				BLE	increment		; if R2 bigger set max to r2
-				MOVS R0, R2
+				CMP  R2, R0			; compare max with r2 value					
+				BLE	increment		; if R2 smaller skip to increment
+				MOVS R0, R2			; if R2 bigger set max to r2
 
 increment
 				ADDS R1, #1			; increment index
